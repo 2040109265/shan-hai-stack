@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'font';
+    src:url('@/assets/font/2.woff2')format('woff2');
+  }
+
+:root{
+    --default-font:'font',sans-serif;
+}
+
+html{
+    font-family: var(--default-font);
+}
+
