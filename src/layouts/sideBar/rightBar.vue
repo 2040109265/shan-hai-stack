@@ -104,11 +104,14 @@ onMounted(()=>{
         }
       }
       
-      @media (max-width: 800px) {
-        .rightBar {
-          width: 0;
-        }
-      }
+     
       .tag-icon{
         margin:0 10px 0 -10px;      }
+ @media (max-width: 1200px) {
+        .rightBar {
+          display: none;
+        }
+      }
+
+
 </style>

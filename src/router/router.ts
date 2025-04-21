@@ -58,6 +58,10 @@ export const constantRouter:RouteRecordRaw[]=[
         path:'/writeArticle',
         name:'writeArticle',
         component:()=>import('@/views/editor/index.vue')
+    },{
+        path:'/ai',
+        name:'ai',
+        component:()=>import('@/views/ai/index.vue')
     }
 ]
 

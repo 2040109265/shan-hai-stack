@@ -33,7 +33,7 @@
       
       <div class="article-meta">
         <div class="meta-left">
-          <img :src="articleDetail.userVO.avatar" alt="头像"/>
+          <img :src="articleDetail.userVO.avatar==null?defaultAvatar:articleDetail.userVO.avatar" alt="头像" class="img" v-lazy-img/>
           <div class="meta-date">
             <div class="meta-name">{{articleDetail.userVO.username}}</div>
             <div class="meta-datails">
@@ -77,7 +77,7 @@
         <span>{{articleDetail.summary}}</span>
       </el-card>
       <hr/>
-      <!-- Markdown 内容 -->
+     
       <article class="article-content" v-html="compiledMarkdown"  ref="articleContent">
       </article>
       <hr/>
@@ -136,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed , onMounted, ref,reactive,nextTick, onUnmounted} from 'vue'
+import { computed , onMounted, ref,reactive,nextTick, onUnmounted, defineAsyncComponent} from 'vue'
 import { useAuthStore } from '@/store'
 import { Star ,Calendar,Files,View,Timer,ChatDotRound,Collection,InfoFilled,CircleCheck,WarnTriangleFilled, Share,Management} from '@element-plus/icons-vue'
 import headerBar from '@/layouts/headerBar/index.vue'
@@ -147,9 +147,10 @@ import { ElMessage } from 'element-plus'
 import { dayjs } from 'element-plus'
 import '@/css/variables.scss'
 import { toggleLike,toggleCollect } from '@/api/article'
-import Comment from '@/components/comment/index.vue'
 
+import defaultAvatar from '@/assets/avatar.png'
 
+const Comment=defineAsyncComponent(()=>import('@/components/comment/index.vue').then(m=>m.default))
 const route=useRoute()
 const activeId=ref('')
 const authStore=useAuthStore()
@@ -193,7 +194,8 @@ let articleDetail=reactive({
         },
         categoryName: ""
 })
-// 新增 Markdown 解析
+
+
 const compiledMarkdown = computed(() => {
   return marked(articleDetail.contentHtml || '')
 })
@@ -465,7 +467,11 @@ const findById = async (id: number) => {
       justify-content: space-between;
       align-items: center;
       width:380px;
-
+      .img{
+        height:45px;
+        width:auto;
+        border-radius: 50%;
+      }
      
     } 
     
@@ -597,6 +603,11 @@ const findById = async (id: number) => {
     }
   }
 
+  @media screen and (max-width:1114px) {
+    .toc-card{
+      display: none;
+    }
+  }
 .toc-card {
   position: sticky;
   top: 100px;
@@ -782,17 +793,15 @@ const findById = async (id: number) => {
       padding: 1em;
       padding-top:2em;
       padding-left: 4em;
-      /* 增加左侧padding */
+      
       margin-left: 0;
-      /* 移除margin */
+ 
       overflow-x: auto;
       font-family: 'Fira Code', monospace;
       font-size: 14px;
       line-height: 1.5;
       position: relative;
-      /* 添加相对定位 */
-
-      /* 添加水平滚动条样式 */
+ 
       &::-webkit-scrollbar {
         height: 8px;
       }

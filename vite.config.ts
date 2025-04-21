@@ -10,5 +10,14 @@ export default defineConfig({
       '@':path.resolve(__dirname,'./src')
     },
     
-  }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://api.shanhaizhan.sheephappy.asia:9000',
+        changeOrigin: true, 
+        rewrite: (path) => path.replace(/^\/api/, ''), 
+      },
+    },
+  },
 })

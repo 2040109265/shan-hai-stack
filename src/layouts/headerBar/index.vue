@@ -8,7 +8,7 @@
         <div class="header-list">
             <div class="header-list-item" @click="toHome" type="active"><span>首页</span></div>
             <div class="header-list-item"><span>刷题</span></div>
-            <div class="header-list-item"><span>AI</span></div>
+            <div class="header-list-item" @click="toAi"><span>AI</span></div>
             <div class="header-list-item"><span>斗图</span></div>
             <div class="header-list-item"><span>水贴</span></div>
             <div class="header-list-item"><span>活动</span></div>
@@ -34,7 +34,7 @@
                     <el-icon class="create-icon"><Document/></el-icon>
                     <span>查看文章</span>
                     </el-dropdown-item>
-                    <el-dropdown-item>
+                    <el-dropdown-item @click="toAi">
                     <el-icon class="create-icon"><Cpu/></el-icon>
                     <span>寻找ai</span>
                     </el-dropdown-item>
@@ -49,7 +49,7 @@
             <el-icon class="messageIcon" ><Bell/></el-icon>
         </div>
         <div class="me" @click="myContainer">
-            <img src="" alt="头像"/>
+            <img :src="authStore.userInfo?.avatar?authStore.userInfo.avatar:defaultAvatar" alt="头像" class="img"/>
         </div>
         
     </div>
@@ -214,6 +214,7 @@ import { ref,reactive,onMounted,onUnmounted} from 'vue'
 import { useRouter } from 'vue-router';
 import {useAuthStore} from "@/store/modules/auth";
 import { registerByPassword } from '@/api/auth';
+import defaultAvatar from '@/assets/avatar.png'
 
 const router=useRouter()
 const hidden=ref(false);
@@ -251,6 +252,10 @@ const rules={
         {required:true,message:"请输入密码",trigger:'blur'},
         {min:8,max:16,message:"请输入至少8位，至多16位的密码",trigger:'blur'}
     ]
+}
+
+const toAi=()=>{
+    router.push('/ai')
 }
 
 const toHome=()=>{
@@ -291,7 +296,6 @@ const login=async()=>{
         try{
             await authStore.login(loginForm);
             ElMessage.success("登陆成功!");
-            console.log(authStore)
             resetForm();
             closeDetail();
         }catch(error){
@@ -453,6 +457,11 @@ const toLookArticle=()=>{
         align-items: center;
         
     }
+    @media (max-width:1114px) {
+        .vip,.message{
+            display: none;
+        }
+    }
     .messageIcon{
         color:rgb(95, 200, 86);
         font-size:23px;
@@ -461,6 +470,11 @@ const toLookArticle=()=>{
         position: absolute;
         right:3%;
         cursor: pointer;
+        .img{
+            height:45px;
+            width:auto;
+            border-radius: 50%;
+        }
     }
 
     @media(max-width:1250px){

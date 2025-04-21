@@ -81,7 +81,7 @@
                                         v-for="item in tags" 
                                         :key="item.id" 
                                         :label="item.name" 
-                                        :value="item.id"
+                                        :value="item.name"
                                     />
                                 </el-select>
                             </el-form-item>
@@ -106,8 +106,8 @@
                             <el-form-item label="是否为原创" prop="isOriginal">
                                 <el-switch
                                     v-model="articleForm.isOriginal"
-                                    :active-value="1"
-                                    :inactive-value="0"
+                                    :active-value="0"
+                                    :inactive-value="1"
                                     active-text="原创文章"
                                     inactive-text="转载文章"
                                 />
@@ -115,7 +115,7 @@
                     
                             <!-- 新增原文链接 -->
                             <el-form-item 
-                                v-if="articleForm.isOriginal === 0"
+                                v-if="articleForm.isOriginal === 1"
                                 label="原文链接" 
                                 prop="originalUrl"
                             >
@@ -163,7 +163,7 @@ const articleForm = reactive({
   contentMd: '',
   cover: '',
   readTime:0,
-  isOriginal: 1,
+  isOriginal: 0,
   originalUrl: '',
   categoryId: '',
   tagList:[]
@@ -411,7 +411,7 @@ const handleCoverUpload = async (e) => {
   try {
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('type',1)
+    formData.append('type',0)
     
     const res = await handleImg(formData)
 

@@ -105,13 +105,13 @@ onMounted(()=>{
         
         display: grid;
         grid-template-rows: 120px 1fr 140px;
-        @media(max-width:1240px){
+       
+    }
+   @media(max-width:1240px){
             .leftBar{
                display: none;
             }
         }
-    }
-  
 
 
 

@@ -44,7 +44,7 @@
                   <el-icon @click.stop="handleCollect(article.id)" :style="{color:article.collected?'#faa755':'#3E3A39'}" ><Star/></el-icon>
                   <span>{{article.collectCount}}</span>
                 </div>
-                <div class="tags-right">
+                <div class="tags-right" >
                   <span v-for="tag in article.tagList">
                     {{ tag }}
                   </span>
@@ -52,7 +52,7 @@
               </div>
           </div>
           <div class="item-img">
-            <img src="" alt="图片"/>
+            <img :src="`${article.cover}`" alt="图片" style="height:100px; width:auto;border-radius:10%;" v-lazy-img/>
           </div>
 
           </div>
@@ -298,6 +298,13 @@ onMounted(() => {
  padding-top: 20px;
 }
 
+@media (max-width:1260px){
+  .global-wrapper{
+    display: grid;
+    grid-template-columns:1fr;
+  }
+}
+
 .main-content {
   position: relative;
   background: #fff;
@@ -374,7 +381,17 @@ onMounted(() => {
       padding:1px;
       
     }
+    margin-right: 10px;
   }
+  
+}
+@media screen and (max-width:1200px) {
+  .item-details{
+    .tags-right{
+   display: none;
+  }
+  }
+  
 }
 
 

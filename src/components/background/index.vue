@@ -2,7 +2,8 @@
     <canvas id="canvas"  />
 </template>
 <script setup lang="ts">
-import { onMounted , onUnmounted, ref} from 'vue'
+import { onMounted , onUnmounted, ref, shallowReactive} from 'vue'
+
 
     interface Circle{
         x : number
@@ -32,8 +33,10 @@ import { onMounted , onUnmounted, ref} from 'vue'
     })
 
     const canvas = ref<HTMLCanvasElement|null>(null)
-    const circles = ref<Circle[]>([])
+    const circles = shallowReactive<Circle[]>([])
     const animationFrameId = ref<number | null >(null)
+    const offscreenCanvas=document.createElement('canvas')
+    const offscreenCtx=offscreenCanvas.getContext('2d')
 
     const getDistance=(circle1:Circle,circle2:Circle):number=>{
         return Math.sqrt(Math.pow(circle2.x-circle1.x,2)+Math.pow(circle2.y-circle1.y,2))

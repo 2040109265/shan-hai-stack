@@ -172,6 +172,7 @@ p{
     color:rgba(168, 244, 150, 0.8);
     letter-spacing:3px;
     overflow: hidden;
+    width:400px;
     white-space: nowrap;
     border-right:2px solid rgba(168,244,150,0.8);
     animation: print 3s steps(30,end) forwards,

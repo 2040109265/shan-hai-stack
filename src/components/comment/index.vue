@@ -3,7 +3,7 @@
       <!-- 评论输入框 -->
       <div class="comment-editor">
         <div class="editor-header">
-          <img :src="userAvatar" :alt="userName" />
+          <img :src="userAvatar" :alt="userName" v-lazy-img />
           <div class="user-info">
             <span class="user-name">{{ userName }}</span>
             <span class="tip">支持 Markdown 格式</span>
@@ -57,7 +57,7 @@
         <template v-if="sortedComments.length">
           <div v-for="comment in sortedComments" :key="comment.id" :id="`comment-${comment.id}`" class="comment-item">
             <div class="comment-avatar">
-              <img :src="comment.avatar" :alt="comment.nickname" />
+              <img :src="comment.avatar?comment.avatar:defaultAvatar" v-lazy-img :alt="comment.nickname" style="height:45px;width:auto;border-radius:50%;"/>
             </div>
             <div class="comment-content">
               <div class="comment-header">
@@ -82,7 +82,7 @@
               <div v-if="comment.children?.length" class="replies-list">
                 <div v-for="reply in comment.children" :key="reply.id" class="reply-item">
                   <div class="reply-avatar">
-                    <img :src="reply.avatar" :alt="reply.nickname" />
+                    <img :src="reply.avatar?reply.avatar:defaultAvatar" :alt="reply.nickname" v-lazy-img style="height:45px;width:auto;border-radius:50%;"/>
                   </div>
                   <div class="reply-content">
                     <div class="reply-header">
@@ -202,6 +202,7 @@ import { getBrowserInfo } from '@/utils/browser'
 import { useAuthStore } from '@/store'
 import V3Emoji from 'vue3-emoji'
 import 'vue3-emoji/dist/style.css'
+import defaultAvatar from '@/assets/visitor.png'
 
 import JSONBig from 'json-bigint'
 const JSONbigString =JSONBig({storeAsString:true})
