@@ -106,6 +106,10 @@ const handleTime=(time:string)=>{
 }
 
 
+const handleEdit=(id:number)=>{
+  router.push({path:'/writeArticle',query:{draftId:id}})
+}
+
 onMounted(()=>{
   fetchArticle()
 })
@@ -148,7 +152,7 @@ onMounted(()=>{
       <el-table-column prop="readTime" label="预计阅读时间(min)" width="120" />
       <el-table-column label="操作">
         <template #default="{ row }">
-          <el-button v-if="row.status === ArticleStatus.DRAFT" type="primary" link>
+          <el-button v-if="row.status === ArticleStatus.DRAFT" type="primary" link @click="handleEdit(row.id)">
             编辑
           </el-button>
           <el-button type="primary" link @click="handleLook(row.id)">

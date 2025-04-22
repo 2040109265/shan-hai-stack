@@ -142,7 +142,7 @@
 <script setup >
 import { ref, reactive, onMounted ,watch} from 'vue'
 import {ArrowLeft} from '@element-plus/icons-vue'
-import { useRouter } from 'vue-router'
+import { useRouter,useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import {mavonEditor} from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
@@ -150,8 +150,9 @@ import 'mavon-editor/dist/css/index.css';
 import { getCategories, getTags,publishArticle,draftArticle,draftArticleLast } from '@/api/article'
 import { handleImg } from '@/api/img';
 import { useAuthStore } from '@/store';
+import { getArticleById } from '@/api/article';
 
-
+const route=useRoute()
 const router = useRouter()
 const authStore=useAuthStore()
 // 响应式数据
@@ -310,7 +311,26 @@ onMounted(async () => {
     fetchTags(),
 
   ])
-  
+  const draftId=route.query.draftId
+  if(draftId){
+    try{
+        const data=await getArticleById(draftId)
+        Object.assign(articleForm, {
+        id: data.id,
+        title: data.title,
+        summary: data.summary,
+        contentMd: data.contentMd,
+        cover: data.cover,
+        isOriginal: data.isOriginal,
+        originalUrl: data.originalUrl,
+        categoryId: data.categoryId,
+        tagList: data.tagList,
+        readTime: data.readTime
+      })
+    }catch(err){
+        ElMessage.error('草稿加载失败')
+    }
+  }
  
 })
 
@@ -333,6 +353,7 @@ const fetchTags = async () => {
 const saveDraft = async () => {
     loading.value=true
   if (isSubmitting.value) return
+articleForm.contentHtml = mdRef.value.d_render
 
   const id=await draftArticleLast(1);
   articleForm.id=id
@@ -340,7 +361,7 @@ const saveDraft = async () => {
     await articleFormRef.value.validate()
     
     isSubmitting.value = true
-    articleForm.contentHtml = mdRef.value.d_render
+    
     
     await draftArticle(articleForm)
     

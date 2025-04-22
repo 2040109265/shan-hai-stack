@@ -91,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onActivated } from 'vue'
 import { ElMessage } from 'element-plus'
 import { articleSearch, toggleLike, toggleCollect} from "@/api/article"
 import  { Article, ArticleSearchDTO } from "@/types/article"
@@ -153,6 +153,7 @@ const fetchArticles = async () => {
     loading.value=false
   }
 }
+
 
 const handleChildEvent=async(params:any)=>{
   if(params.id===0){
