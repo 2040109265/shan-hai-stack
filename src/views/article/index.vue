@@ -30,10 +30,12 @@
             </span>
           </template>
 
-          <div v-for="article in articles" :key="article.id" class="article-item" @click="lookDetails(article.id)">
+          <el-skeleton :rows="4" animated v-if="loading" />
+          <div v-if="articles.length">
+          <div v-for="(article,index) in articles" :key="article.id" class="article-item" @click="lookDetails(article.id)">
             <div class="item-details">
               <h2>{{article.title}}</h2>
-              <p>{{article.summary}}</p>
+              <p>{{handleSummary(article.summary)}}</p>
               <div class="item-tags">
                 <div class="tags-left">
                   <span>{{article.userVO.username}}</span>
@@ -52,10 +54,31 @@
               </div>
           </div>
           <div class="item-img">
-            <img :src="`${article.cover}`" alt="图片" style="height:100px; width:auto;border-radius:10%;" v-lazy-img/>
+            <img :src="article.cover" alt="图片" :loading="index<3?'eager':'lazy' "style="height:90px; width:auto;border-radius:10%" v-lazy-img/>
           </div>
 
           </div>
+        </div>
+        <div v-else class="no-articles">
+          <el-empty 
+            description="暂时还没有相关文章哦~" 
+            
+          >
+            <template #description>
+              <p class="empty-text">还没有人分享过相关内容</p>
+              <el-button 
+              class="btn"
+                type="primary" 
+                size="small"
+                @click.stop="handleWriteArticle"
+                style="margin-top:20px;"
+              >
+                去创作
+              </el-button>
+            </template>
+          </el-empty>
+          
+        </div>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -80,7 +103,7 @@ import { useRouter } from 'vue-router'
 import JSONBig from 'json-bigint'
 import '@/css/global.scss'
 const JSONbigString =JSONBig({storeAsString:true})
-
+const loading=ref(false)
 // 响应式状态
 const articles = ref<Article[]>([])
 const activeTab = ref<'default' | 'hot'>('default')
@@ -106,6 +129,7 @@ const router=useRouter()
 // 获取文章列表
 const fetchArticles = async () => {
   try {
+    loading.value=true
     const data = await articleSearch({ 
       size: 10,
       sortField: requestParams.sortField
@@ -123,12 +147,17 @@ const fetchArticles = async () => {
   } catch (error) {
     ElMessage.error("获取文章失败")
     console.error("获取失败原因", error)
+    
+  }
+  finally{
+    loading.value=false
   }
 }
 
 const handleChildEvent=async(params:any)=>{
   if(params.id===0){
     fetchArticles()
+  
 
     return;
   }
@@ -257,6 +286,11 @@ const handleSortClick = async() => {
  
 }
 
+const handleSummary=(summary:string)=>{
+  if(summary.length<=30)return summary
+  return summary.substring(0,30)+'...'
+}
+
 const handleFind=async(params:string)=>{
   try {
     const data = await articleSearch({ 
@@ -278,6 +312,10 @@ const handleFind=async(params:string)=>{
     ElMessage.error("获取文章失败")
     console.error("获取失败原因", error)
   }
+}
+
+const handleWriteArticle=()=>{
+  router.push('/editor')
 }
 
 // 初始化加载
@@ -415,4 +453,17 @@ onMounted(() => {
     color: var(--el-color-primary);
   }
 }
+.no-articles {
+  padding: 50px 0;
+  text-align: center;
+  color: #909399;
+  
+  &.empty-text {
+    margin-top: 20px;
+   
+  }
+  
+ }
+
+
 </style>

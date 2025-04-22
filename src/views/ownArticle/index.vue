@@ -12,7 +12,7 @@ let name=authStore.userInfo?.username||'游客'
 
 enum ArticleStatus {
   DRAFT = 0,
-  PUBLISHED = 1
+  PUBLISHED = 2
 }
 
 // 文章接口类型

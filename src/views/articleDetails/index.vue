@@ -1,7 +1,8 @@
 <template>
   
   <headerBar/>
-  <div class="article-container">
+  
+  <div class="article-container" >
     <div class="sidebar"></div>
     <div class="sidebar-on">
       <el-tooltip content="点赞" placement="left">
@@ -131,6 +132,7 @@
       </div>
     </div>
    </div>
+  
   </div>
 
 </template>
@@ -149,7 +151,7 @@ import '@/css/variables.scss'
 import { toggleLike,toggleCollect } from '@/api/article'
 
 import defaultAvatar from '@/assets/avatar.png'
-
+const loading =ref(false)
 const Comment=defineAsyncComponent(()=>import('@/components/comment/index.vue').then(m=>m.default))
 const route=useRoute()
 const activeId=ref('')
@@ -362,6 +364,7 @@ const scrollTo = (id: string) => {
 // 在获取文章内容后生成目录
 const findById = async (id: number) => {
   try {
+    loading.value=true
     Object.assign(articleDetail, await getArticleById(id))
     
     nextTick(() => {
@@ -370,6 +373,9 @@ const findById = async (id: number) => {
     })
   } catch (error) {
   ElMessage.error("获取错误！")
+  }
+  finally{
+    loading.value=false
   }
 }
 
@@ -445,6 +451,7 @@ const findById = async (id: number) => {
   padding: 40px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width:850px;
 
   .article-title {
     font-size: 32px;

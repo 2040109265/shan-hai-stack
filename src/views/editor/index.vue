@@ -106,8 +106,8 @@
                             <el-form-item label="是否为原创" prop="isOriginal">
                                 <el-switch
                                     v-model="articleForm.isOriginal"
-                                    :active-value="0"
-                                    :inactive-value="1"
+                                    :active-value="1"
+                                    :inactive-value="0"
                                     active-text="原创文章"
                                     inactive-text="转载文章"
                                 />
@@ -115,7 +115,7 @@
                     
                             <!-- 新增原文链接 -->
                             <el-form-item 
-                                v-if="articleForm.isOriginal === 1"
+                                v-if="articleForm.isOriginal === 0"
                                 label="原文链接" 
                                 prop="originalUrl"
                             >
@@ -151,6 +151,7 @@ import { getCategories, getTags,publishArticle,draftArticle,draftArticleLast } f
 import { handleImg } from '@/api/img';
 import { useAuthStore } from '@/store';
 
+
 const router = useRouter()
 const authStore=useAuthStore()
 // 响应式数据
@@ -159,11 +160,11 @@ const articleForm = reactive({
   id: 0,
   title: '',
   summary: '',
-  contentHTML: '',
+  contentHtml: '',
   contentMd: '',
   cover: '',
   readTime:0,
-  isOriginal: 0,
+  isOriginal: 1,
   originalUrl: '',
   categoryId: '',
   tagList:[]
@@ -212,9 +213,9 @@ const handleBeforeSubmit = async (type) => {
 const handleFinalSubmit = async () => {
     try {
         // 验证补充表单
+     
         await supplementFormRef.value.validate()
         
-        // 执行原保存/提交逻辑
         if (submitType.value === 'draft') {
             await saveDraft()
         } else {
@@ -322,9 +323,10 @@ const fetchCategories = async () => {
 const fetchTags = async () => {
   const res = await getTags()
   tags.value=res.flatMap(node=>node.children||[])
-  console.log(tags.value)
+  
   }
 
+ 
 
 
 // 业务逻辑方法
@@ -338,7 +340,7 @@ const saveDraft = async () => {
     await articleFormRef.value.validate()
     
     isSubmitting.value = true
-    articleForm.contentHTML = mdRef.value.d_render
+    articleForm.contentHtml = mdRef.value.d_render
     
     await draftArticle(articleForm)
     
@@ -354,6 +356,8 @@ const saveDraft = async () => {
 }
 
 const publishArticles = async () => {
+const id=await draftArticleLast(1);
+  articleForm.id=id
   await submitArticle()
 }
 
@@ -364,12 +368,12 @@ const submitArticle = async () => {
     await articleFormRef.value.validate()
     
     isSubmitting.value = true
-    articleForm.contentHTML = mdRef.value.d_render
-    
+    articleForm.contentHtml = mdRef.value.d_render
+    console.log(articleForm)
     await publishArticle(articleForm)
     
     ElMessage.success('保存成功')
-    router.push('/home')
+    router.push('/article')
   } catch (error) {
     ElMessage.error(error.message || '操作失败')
   } finally {
