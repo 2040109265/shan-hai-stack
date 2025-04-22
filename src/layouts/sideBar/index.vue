@@ -45,13 +45,13 @@
                 >
        
         <swiper-slide>
-          <img src="@/assets/advertisement.jpg" alt="广告1" class="slide-image" />
+          <img src="@/assets/advertisement.jpg" alt="广告1" class="slide-image" decoding="async"/>
         </swiper-slide>
         <swiper-slide>
-          <img src="@/assets/avatar.jpg" alt="广告2" class="slide-image" />
+          <img src="@/assets/avatar.jpg" alt="广告2" class="slide-image" decoding="async"/>
         </swiper-slide>
         <swiper-slide>
-          <img src="@/assets/logo.jpg" alt="广告3" class="slide-image" />
+          <img src="@/assets/logo.jpg" alt="广告3" class="slide-image" decoding="async"/>
         </swiper-slide>
         
       </swiper>
@@ -280,8 +280,49 @@ onMounted(()=>{
         max-width:260px;
         max-height:140px;
     }
-    :deep(.swiper-button-next,.swiper-button-prev) {
-       
+    :deep(.swiper-pagination) {
+        bottom: 10px !important;
+      
+        .swiper-pagination-bullet {
+          width: 10px;
+          height: 10px;
+          background: rgba(255,255,255,0.5);
+          opacity: 1;
+          margin: 0 6px !important;
+          transition: all 0.3s;
+      
+          &-active {
+            background: #67C23A;
+            transform: scale(1.2);
+          }
+      
+          &:hover {
+            background: #85ce61;
+          }
+        }
+      }
+      :deep(.swiper-button-prev),
+:deep(.swiper-button-next) {
+  width: 24px;
+  height: 24px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 50%;
+  transition: all 0.3s;
 
-    }
+  &::after {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  &:hover {
+    background: rgba(0,0,0,0.6);
+    transform: scale(1.1);
+  }
+
+  &.swiper-button-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
 </style>

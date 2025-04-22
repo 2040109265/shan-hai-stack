@@ -11,7 +11,7 @@
             <div class="top">
                 <img src="@/assets/logo.jpg" class="logo" alt="logo"/>
                 <div class="logo-message"><span>Shan-Hai-Stack</span></div>
-                <div class="detail"><div class="home" @click="handleHome">首页</div><div class="submission">需求提交</div><div class="talk">加入讨论</div><div class="money">赞助</div><span>登录</span></div>
+                <div class="detail"><div class="home" @click="handleHome">首页</div><div class="submission" @click="handleNo">需求提交</div><div class="submission" @click="handleNo">加入讨论</div><div class="money" @click="handleNo">赞助</div></div>
                 
             </div>
             <div  class="topside">
@@ -23,13 +23,14 @@
                 <div class="leftSide">
                     <div class="headerSide">技术支持</div>
                     <div class="main">
+                        <a href="https://github.com/2040109265/shan-hai-stack">
                         <div class="icon-item">
                             <svg  aria-hidden="true" viewBox="0 0 24 24" style="fill: #b41b1b;" version="1.1"  data-view-component="true" class="icon">
                             <path d="M12 1C5.9225 1 1 5.9225 1 12C1 16.8675 4.14875 20.9787 8.52125 22.4362C9.07125 22.5325 9.2775 22.2025 9.2775 21.9137C9.2775 21.6525 9.26375 20.7862 9.26375 19.865C6.5 20.3737 5.785 19.1912 5.565 18.5725C5.44125 18.2562 4.905 17.28 4.4375 17.0187C4.0525 16.8125 3.5025 16.3037 4.42375 16.29C5.29 16.2762 5.90875 17.0875 6.115 17.4175C7.105 19.0812 8.68625 18.6137 9.31875 18.325C9.415 17.61 9.70375 17.1287 10.02 16.8537C7.5725 16.5787 5.015 15.63 5.015 11.4225C5.015 10.2262 5.44125 9.23625 6.1425 8.46625C6.0325 8.19125 5.6475 7.06375 6.2525 5.55125C6.2525 5.55125 7.17375 5.2625 9.2775 6.67875C10.1575 6.43125 11.0925 6.3075 12.0275 6.3075C12.9625 6.3075 13.8975 6.43125 14.7775 6.67875C16.8813 5.24875 17.8025 5.55125 17.8025 5.55125C18.4075 7.06375 18.0225 8.19125 17.9125 8.46625C18.6138 9.23625 19.04 10.2125 19.04 11.4225C19.04 15.6437 16.4688 16.5787 14.0213 16.8537C14.42 17.1975 14.7638 17.8575 14.7638 18.8887C14.7638 20.36 14.75 21.5425 14.75 21.9137C14.75 22.2025 14.9563 22.5462 15.5063 22.4362C19.8513 20.9787 23 16.8537 23 12C23 5.9225 18.0775 1 12 1Z"></path>
                              </svg>
-                            <div class="icon-name">GitHub</div>
+                            <div class="icon-name" >GitHub</div>
                         </div>
-
+                        </a>
                         <div class="icon-item">
                             <svg t="1742810502087" class="icon"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3031" ><path d="M512 1024C229.2224 1024 0 794.7776 0 512S229.2224 0 512 0s512 229.2224 512 512-229.2224 512-512 512z m259.1488-568.8832H480.4096a25.2928 25.2928 0 0 0-25.2928 25.2928l-0.0256 63.2064c0 13.952 11.3152 25.2928 25.2672 25.2928h177.024c13.9776 0 25.2928 11.3152 25.2928 25.2672v12.6464a75.8528 75.8528 0 0 1-75.8528 75.8528H366.592a25.2928 25.2928 0 0 1-25.2672-25.2928v-240.1792a75.8528 75.8528 0 0 1 75.8272-75.8528h353.9456a25.2928 25.2928 0 0 0 25.2672-25.2928l0.0768-63.2064a25.2928 25.2928 0 0 0-25.2672-25.2928H417.152a189.6192 189.6192 0 0 0-189.6192 189.6448v353.9456c0 13.9776 11.3152 25.2928 25.2928 25.2928h372.9408a170.6496 170.6496 0 0 0 170.6496-170.6496v-145.408a25.2928 25.2928 0 0 0-25.2928-25.2672z" fill="#C71D23" p-id="3032"></path></svg>
                             <div class="icon-name">Gitee</div>
@@ -69,11 +70,26 @@
 <script setup lang="ts">
 import background from '@/components/background/index.vue'
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 const router=useRouter()
 const handleHome=()=>{
     router.push('/article')
 }
+const throttle=(func:Function,delay:number)=>{
+    let lastTime=0;
+    return function(...args){
+        const context=this;
+        const now=Date.now()
+        if(now-lastTime>=delay){
+            func.apply(context,args)
+            lastTime=now;
+        }
+    }
+}
 
+const handleNo=throttle(()=>{
+    ElMessage.info("难道你真的要打赏嘛~");
+},1000);
 </script>
 <style lang="scss" scoped>
 .background{
@@ -232,6 +248,7 @@ p{
     justify-content: space-around;
     align-items: center;
     padding-right: 20px;
+    transition: 0.5s ease-in-out;
 }
 .icon-item :hover{
     transform: translateY(-3px);

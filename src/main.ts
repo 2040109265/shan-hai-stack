@@ -7,6 +7,8 @@ import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import '@/css/global.scss'
 import { createLazyImgDirective } from '@/directives/createLazyImg'
+import VueVirtualScroller from 'vue-virtual-scroller'
+
 
 const vThrottleClick={
     mounted(el,binding){
@@ -32,7 +34,7 @@ pinia.use(piniaPluginPersistedstate)
 app.use(router)
 app.use(ElementPlus)
 app.use(pinia)
-
+app.use(VueVirtualScroller)
 app.directive('throttleClick',vThrottleClick)
 app.directive('lazy-img',createLazyImgDirective)
 app.mount('#app')

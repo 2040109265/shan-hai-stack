@@ -32,32 +32,42 @@
 
           <el-skeleton :rows="4" animated v-if="loading" />
           <div v-if="articles.length">
-          <div v-for="(article,index) in articles" :key="article.id" class="article-item" @click="lookDetails(article.id)">
+            <RecycleScroller 
+            class="scroller" 
+            :items="articles" 
+            :item-size="100" 
+            key-field="id"
+            :buffer="200"
+            page-mode>
+            <template v-slot="{item}">
+          <div  class="article-item" @click="lookDetails(item.id)">
             <div class="item-details">
-              <h2>{{article.title}}</h2>
-              <p>{{handleSummary(article.summary)}}</p>
+              <h2>{{item.title}}</h2>
+              <p>{{handleSummary(item.summary)}}</p>
               <div class="item-tags">
                 <div class="tags-left">
-                  <span>{{article.userVO.username}}</span>
-                  <i @click.stop="handleLike(article.id)">
-                    <svg t="1743521001255" class="icon" :fill="article.liked?'#d81e06':'#3E3A39'" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1962" width="13px" height="13px"><path d="M760.384 64c47.808 0 91.968 11.968 132.352 35.84a264.32 264.32 0 0 1 95.872 97.152A263.68 263.68 0 0 1 1024 330.88c0 34.752-6.592 68.544-19.712 101.312a262.4 262.4 0 0 1-57.536 87.424L512 960 77.248 519.68A268.8 268.8 0 0 1 0 330.88c0-48.384 11.776-93.056 35.392-133.952A264.32 264.32 0 0 1 131.2 99.84 255.296 255.296 0 0 1 263.68 64 260.736 260.736 0 0 1 449.92 142.208l62.08 62.912 62.144-62.912a258.944 258.944 0 0 1 86.336-58.24A259.584 259.584 0 0 1 760.512 64h-0.128z m0 88.96a174.272 174.272 0 0 0-124.16 52.16L511.872 330.88 387.84 205.12a174.272 174.272 0 0 0-124.288-52.16c-32 0-61.504 7.936-88.384 23.808a175.36 175.36 0 0 0-63.808 64.64 176.32 176.32 0 0 0-23.552 89.536c0 23.168 4.352 45.632 13.056 67.392 8.704 21.824 21.504 41.28 38.4 58.432L512 834.176l372.672-377.408c16.896-17.152 29.696-36.608 38.4-58.432 8.704-21.76 13.056-44.224 13.056-67.392 0-32.448-7.808-62.336-23.488-89.536a175.36 175.36 0 0 0-63.872-64.64 170.688 170.688 0 0 0-88.32-23.808z"  p-id="1963"></path></svg>
+                  <span>{{item.userVO.username}}</span>
+                  <i @click.stop="handleLike(item.id)">
+                    <svg t="1743521001255" class="icon" :fill="item.liked?'#d81e06':'#3E3A39'" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1962" width="13px" height="13px"><path d="M760.384 64c47.808 0 91.968 11.968 132.352 35.84a264.32 264.32 0 0 1 95.872 97.152A263.68 263.68 0 0 1 1024 330.88c0 34.752-6.592 68.544-19.712 101.312a262.4 262.4 0 0 1-57.536 87.424L512 960 77.248 519.68A268.8 268.8 0 0 1 0 330.88c0-48.384 11.776-93.056 35.392-133.952A264.32 264.32 0 0 1 131.2 99.84 255.296 255.296 0 0 1 263.68 64 260.736 260.736 0 0 1 449.92 142.208l62.08 62.912 62.144-62.912a258.944 258.944 0 0 1 86.336-58.24A259.584 259.584 0 0 1 760.512 64h-0.128z m0 88.96a174.272 174.272 0 0 0-124.16 52.16L511.872 330.88 387.84 205.12a174.272 174.272 0 0 0-124.288-52.16c-32 0-61.504 7.936-88.384 23.808a175.36 175.36 0 0 0-63.808 64.64 176.32 176.32 0 0 0-23.552 89.536c0 23.168 4.352 45.632 13.056 67.392 8.704 21.824 21.504 41.28 38.4 58.432L512 834.176l372.672-377.408c16.896-17.152 29.696-36.608 38.4-58.432 8.704-21.76 13.056-44.224 13.056-67.392 0-32.448-7.808-62.336-23.488-89.536a175.36 175.36 0 0 0-63.872-64.64 170.688 170.688 0 0 0-88.32-23.808z"  p-id="1963"></path></svg>
                   </i>
-                  <span>{{article.likeCount}}</span>
-                  <el-icon @click.stop="handleCollect(article.id)" :style="{color:article.collected?'#faa755':'#3E3A39'}" ><Star/></el-icon>
-                  <span>{{article.collectCount}}</span>
+                  <span>{{item.likeCount}}</span>
+                  <el-icon @click.stop="handleCollect(item.id)" :style="{color:item.collected?'#faa755':'#3E3A39'}" ><Star/></el-icon>
+                  <span>{{item.collectCount}}</span>
                 </div>
                 <div class="tags-right" >
-                  <span v-for="tag in article.tagList">
+                  <span v-for="tag in item.tagList">
                     {{ tag }}
                   </span>
                 </div>
               </div>
           </div>
           <div class="item-img">
-            <img :src="article.cover" alt="图片" :loading="index<3?'eager':'lazy' "style="height:90px; width:auto;border-radius:10%" v-lazy-img/>
+            <img :src="item.cover" alt="图片"  style="height:90px; width:160px;border-radius:10%" v-lazy-img decoding="async"/>
           </div>
 
           </div>
+        </template>
+        </RecycleScroller>
         </div>
         <div v-else class="no-articles">
           <el-empty 
@@ -91,17 +101,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onActivated } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref, reactive, onMounted, defineAsyncComponent } from 'vue'
+import { ElMessage,ElCard,ElSkeleton } from 'element-plus'
 import { articleSearch, toggleLike, toggleCollect} from "@/api/article"
 import  { Article, ArticleSearchDTO } from "@/types/article"
 import headerBar from '@/layouts/headerBar/index.vue'
-import sideBar from '@/layouts/sideBar/index.vue'
 import rightBar from '@/layouts/sideBar/rightBar.vue'
 import {Star,ArrowDown,ArrowUp} from '@element-plus/icons-vue'
-import { useRouter } from 'vue-router'
+import { useRouter,onBeforeRouteUpdate } from 'vue-router'
 import JSONBig from 'json-bigint'
 import '@/css/global.scss'
+import {RecycleScroller} from 'vue-virtual-scroller'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 const JSONbigString =JSONBig({storeAsString:true})
 const loading=ref(false)
 // 响应式状态
@@ -125,7 +136,7 @@ const requestParams = reactive<ArticleSearchDTO>({
 })
 
 const router=useRouter()
-
+const sideBar=defineAsyncComponent(()=>import('@/layouts/sideBar/index.vue'))
 // 获取文章列表
 const fetchArticles = async () => {
   try {
@@ -316,15 +327,13 @@ const handleFind=async(params:string)=>{
 }
 
 const handleWriteArticle=()=>{
-  router.push('/editor')
+  router.push('/writeArticle')
 }
-
-// 初始化加载
-onMounted(() => {
-  fetchArticles()
- 
-  
+onMounted(()=>{
+   fetchArticles()
 })
+
+
 </script>
 
 <style scoped>

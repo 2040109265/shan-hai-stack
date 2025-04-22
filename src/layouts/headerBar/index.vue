@@ -7,11 +7,11 @@
         </div>
         <div class="header-list">
             <div class="header-list-item" @click="toHome" type="active"><span>首页</span></div>
-            <div class="header-list-item"><span>刷题</span></div>
+            <div class="header-list-item" @click="toWelcome"><span>欢迎</span></div>
             <div class="header-list-item" @click="toAi"><span>AI</span></div>
-            <div class="header-list-item"><span>斗图</span></div>
-            <div class="header-list-item"><span>水贴</span></div>
-            <div class="header-list-item"><span>活动</span></div>
+            <div class="header-list-item" @click="handleNo"><span>斗图</span></div>
+            <div class="header-list-item" @click="handleNo"> <span>水贴</span></div>
+            <div class="header-list-item" @click="handleNo"><span>活动</span></div>
         </div>
         <div class="search">
         <el-input placeholder="探索山海栈"  v-model="textarea" @keyup.enter="handleFind()">
@@ -41,7 +41,7 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-        <div class="vip">
+        <div class="vip" @click="handleNo">
             <el-icon class="vipIcon"><Watch /></el-icon>
             <span>会员</span>
         </div>
@@ -261,6 +261,25 @@ const toAi=()=>{
 const toHome=()=>{
     router.push('/article')
 }
+const toWelcome=()=>{
+    router.push('/welcome')
+}
+
+const throttle=(func:Function,delay:number)=>{
+    let lastTime=0;
+    return function(...args){
+        const context=this;
+        const now=Date.now()
+        if(now-lastTime>=delay){
+            func.apply(context,args)
+            lastTime=now;
+        }
+    }
+}
+
+const handleNo=throttle(()=>{
+    ElMessage.info("内容重复性太多，懒得写了，敬请期待~");
+},1000);
 
 const resetForm=()=>{
     loginForm={username:'',password:''};
